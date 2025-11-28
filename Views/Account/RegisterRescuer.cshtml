@@ -1,0 +1,14 @@
+@model RescueHub.ViewModels.Account.RegisterRescuerViewModel
+<h2>Đăng ký Rescuer</h2>
+<form method="post" class="row g-3 w-75">
+ <div class="col-md-6"><label>Email</label><input asp-for="Email" class="form-control"/></div>
+ <div class="col-md-6"><label>Password</label><input asp-for="Password" type="password" class="form-control"/></div>
+ <div class="col-md-6"><label>Họ tên</label><input asp-for="FullName" class="form-control"/></div>
+ <div class="col-md-6"><label>SĐT</label><input asp-for="PhoneNumber" class="form-control"/></div>
+ <div class="col-md-6"><label>Tổ chức</label><input asp-for="Organization" class="form-control"/></div>
+ <div class="col-md-6"><label>Khu vực</label><input asp-for="MainArea" class="form-control"/></div>
+ <div class="col-md-4"><label>Lat</label><input asp-for="AreaLatitude" class="form-control"/></div>
+ <div class="col-md-4"><label>Lng</label><input asp-for="AreaLongitude" class="form-control"/></div>
+ <div class="col-md-4"><label>Bán kính (km)</label><input asp-for="AreaRadiusKm" class="form-control"/></div>
+ <div class="col-12"><button class="btn btn-success">Đăng ký</button></div>
+</form>

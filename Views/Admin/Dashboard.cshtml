@@ -1,0 +1,36 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    var stats = ViewBag.TotalByStatus;
+}
+<h2 class="mb-3">📊 Admin Dashboard</h2>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card border-primary">
+            <div class="card-body">
+                <h5 class="card-title">Yêu cầu mới 1 giờ qua</h5>
+                <p class="display-6">@ViewBag.NewLastHour</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-success">
+            <div class="card-body">
+                <h5 class="card-title">Yêu cầu mới 24 giờ qua</h5>
+                <p class="display-6">@ViewBag.NewLast24h</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <a class="btn btn-primary w-100 mt-4" asp-action="Map">Xem bản đồ tổng</a>
+    </div>
+</div>
+
+<h4 class="mt-4">Tổng số yêu cầu theo trạng thái</h4>
+<table class="table table-bordered w-auto">
+<tr><th>Trạng thái</th><th>Số lượng</th></tr>
+@foreach (var s in stats)
+{
+    <tr><td>@s.Status</td><td>@s.Count</td></tr>
+}
+</table>

@@ -1,0 +1,43 @@
+@{
+    ViewData["Title"] = "Trang chủ";
+}
+
+<div class="row">
+    <div class="col-lg-7">
+        <h1 class="mb-3">Hệ thống cứu hộ cứu nạn RescueHub</h1>
+        <p class="lead">
+            Hỗ trợ tiếp nhận yêu cầu cứu hộ, đánh dấu an toàn và điều phối lực lượng cứu hộ trong mùa mưa bão, lũ lụt.
+        </p>
+
+        <div class="d-flex flex-column flex-sm-row gap-2 my-4">
+            <a class="btn btn-danger btn-lg" asp-action="RequestHelp">
+                🚨 Yêu cầu cứu hộ khẩn cấp
+            </a>
+            <a class="btn btn-success btn-lg" asp-action="SafeReport">
+                ✅ Tôi đang an toàn
+            </a>
+        </div>
+
+        <ul>
+            <li>Người dân không cần đăng nhập để gửi yêu cầu.</li>
+            <li>Tự động lấy vị trí GPS (nếu cho phép).</li>
+            <li>Đội cứu hộ và Admin có dashboard riêng để theo dõi.</li>
+        </ul>
+    </div>
+    <div class="col-lg-5">
+        <div class="alert alert-info">
+            <strong>Lưu ý:</strong> Đây là hệ thống mô phỏng. Khi triển khai thực tế, cần kết nối với tổng đài, Zalo OA, SMS, Email...
+        </div>
+        <div class="card">
+            <div class="card-header">Đăng nhập nhanh</div>
+            <div class="card-body">
+                <p class="small text-muted">Tài khoản seed sẵn:</p>
+                <ul class="small">
+                    <li>Admin: <code>admin@rescuehub.local</code> / <code>Admin@123</code></li>
+                    <li>Rescuer: <code>rescue1@rescuehub.local</code> / <code>Rescue@123</code></li>
+                </ul>
+                <a class="btn btn-outline-primary btn-sm" asp-controller="Account" asp-action="Login">Đăng nhập</a>
+            </div>
+        </div>
+    </div>
+</div>

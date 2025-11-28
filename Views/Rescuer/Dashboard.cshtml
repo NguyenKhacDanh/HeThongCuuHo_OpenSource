@@ -1,0 +1,38 @@
+@model IEnumerable<RescueHub.Controllers.RescuerDashboardItem>
+@{
+    ViewData["Title"] = "Rescuer Dashboard";
+}
+
+<h2 class="mb-3">🚑 Dashboard đội cứu hộ</h2>
+
+<table class="table table-sm table-striped align-middle">
+    <thead>
+        <tr>
+            <th>Mã yêu cầu</th>
+            <th>Người dân</th>
+            <th>SĐT</th>
+            <th>Ưu tiên</th>
+            <th>Trạng thái</th>
+            <th>Khoảng cách (km)</th>
+            <th>Thời gian tạo</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Request.RequestCode</td>
+            <td>@item.Request.FullName</td>
+            <td>@item.Request.PhoneNumber</td>
+            <td>@item.Request.RiskLevel</td>
+            <td>@item.Request.Status</td>
+            <td>@(item.DistanceKm?.ToString("0.0") ?? "-")</td>
+            <td>@item.Request.CreatedAt.ToLocalTime()</td>
+            <td>
+                <a class="btn btn-sm btn-primary" asp-action="RequestDetails" asp-route-id="@item.Request.Id">Chi tiết</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

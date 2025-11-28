@@ -1,0 +1,120 @@
+@model RescueHub.ViewModels.Public.CreateUserRequestViewModel
+@{
+    ViewData["Title"] = "Yêu cầu cứu hộ khẩn cấp";
+}
+
+<h2 class="mb-3">🚨 Yêu cầu cứu hộ khẩn cấp</h2>
+
+<div class="alert alert-warning">
+    Hãy bình tĩnh, cung cấp thông tin chính xác nhất có thể. Hệ thống sẽ gửi yêu cầu tới đội cứu hộ gần nhất.
+</div>
+
+<form asp-action="RequestHelp" method="post" enctype="multipart/form-data" class="row g-3">
+    <div class="col-md-6">
+        <label class="form-label">Họ và tên *</label>
+        <input asp-for="FullName" class="form-control" />
+        <span asp-validation-for="FullName" class="text-danger"></span>
+    </div>
+    <div class="col-md-6">
+        <label class="form-label">Số điện thoại *</label>
+        <input asp-for="PhoneNumber" class="form-control" />
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Số người cần cứu</label>
+        <input asp-for="PeopleCount" class="form-control" type="number" min="1" />
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">Mực nước ước lượng (cm)</label>
+        <input asp-for="WaterLevel" class="form-control" type="number" min="0" />
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">Ảnh hiện trường (nếu có)</label>
+        <input asp-for="IncidentImage" type="file" class="form-control" />
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Địa chỉ mô tả (nếu không lấy được GPS)</label>
+        <textarea asp-for="AddressText" class="form-control" rows="2"></textarea>
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Tọa độ GPS</label>
+        <div class="input-group mb-2">
+            <span class="input-group-text">Lat</span>
+            <input asp-for="Latitude" class="form-control" />
+            <span class="input-group-text">Lng</span>
+            <input asp-for="Longitude" class="form-control" />
+        </div>
+        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="getLocation()">📍 Lấy vị trí hiện tại</button>
+    </div>
+
+    <div class="col-md-6" id="miniMapContainer" style="height: 250px; display:none;">
+        <div id="miniMap" style="height: 100%;"></div>
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Thông tin đối tượng dễ bị tổn thương</label>
+        <div class="form-check">
+            <input asp-for="HasChildren" class="form-check-input" />
+            <label class="form-check-label">Có trẻ em</label>
+        </div>
+        <div class="form-check">
+            <input asp-for="HasElderly" class="form-check-input" />
+            <label class="form-check-label">Có người già</label>
+        </div>
+        <div class="form-check">
+            <input asp-for="HasPregnantWoman" class="form-check-input" />
+            <label class="form-check-label">Có phụ nữ mang thai</label>
+        </div>
+        <div class="form-check">
+            <input asp-for="HasDisabledPerson" class="form-check-input" />
+            <label class="form-check-label">Có người khuyết tật</label>
+        </div>
+        <div class="form-check">
+            <input asp-for="NeedMedicalSupport" class="form-check-input" />
+            <label class="form-check-label">Cần hỗ trợ y tế khẩn cấp</label>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Mô tả chi tiết tình huống</label>
+        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+    </div>
+
+    <div class="col-12">
+        <button type="submit" class="btn btn-danger btn-lg">Gửi yêu cầu</button>
+    </div>
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        function getLocation() {
+            if (!navigator.geolocation) {
+                alert("Trình duyệt không hỗ trợ GPS.");
+                return;
+            }
+            navigator.geolocation.getCurrentPosition(function (pos) {
+                const lat = pos.coords.latitude;
+                const lng = pos.coords.longitude;
+                document.getElementById("Latitude").value = lat;
+                document.getElementById("Longitude").value = lng;
+
+                const container = document.getElementById("miniMapContainer");
+                container.style.display = "block";
+
+                const map = L.map('miniMap').setView([lat, lng], 16);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19
+                }).addTo(map);
+                L.marker([lat, lng]).addTo(map).bindPopup("Vị trí của bạn").openPopup();
+            }, function (err) {
+                alert("Không lấy được vị trí: " + err.message);
+            });
+        }
+    </script>
+}

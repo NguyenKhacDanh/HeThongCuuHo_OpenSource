@@ -1,0 +1,96 @@
+@model RescueHub.Models.Entities.UserRequest
+@{
+    ViewData["Title"] = "Chi tiết yêu cầu " + Model.RequestCode;
+}
+
+<h2>Yêu cầu @Model.RequestCode</h2>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-sm-4">Người dân</dt>
+            <dd class="col-sm-8">@Model.FullName (@Model.PhoneNumber)</dd>
+
+            <dt class="col-sm-4">Số người</dt>
+            <dd class="col-sm-8">@Model.PeopleCount</dd>
+
+            <dt class="col-sm-4">Ưu tiên</dt>
+            <dd class="col-sm-8">@Model.RiskLevel</dd>
+
+            <dt class="col-sm-4">Trạng thái</dt>
+            <dd class="col-sm-8">@Model.Status</dd>
+
+            <dt class="col-sm-4">Mực nước</dt>
+            <dd class="col-sm-8">@Model.WaterLevel cm</dd>
+
+            <dt class="col-sm-4">Đối tượng đặc biệt</dt>
+            <dd class="col-sm-8">
+                @(Model.HasChildren == true ? "Trẻ em; " : "")
+                @(Model.HasElderly == true ? "Người già; " : "")
+                @(Model.HasPregnantWoman == true ? "Phụ nữ mang thai; " : "")
+                @(Model.HasDisabledPerson == true ? "Người khuyết tật; " : "")
+                @(Model.NeedMedicalSupport == true ? "Cần hỗ trợ y tế; " : "")
+            </dd>
+
+            <dt class="col-sm-4">Địa chỉ</dt>
+            <dd class="col-sm-8">@Model.AddressText</dd>
+
+            <dt class="col-sm-4">Thời gian tạo</dt>
+            <dd class="col-sm-8">@Model.CreatedAt.ToLocalTime()</dd>
+        </dl>
+    </div>
+    <div class="col-md-6">
+        @if (!string.IsNullOrEmpty(Model.IncidentImagePath))
+        {
+            <div class="mb-2">
+                <strong>Ảnh hiện trường:</strong><br />
+                <img src="@Model.IncidentImagePath" class="img-fluid rounded border" />
+            </div>
+        }
+
+        <div id="detailMap" style="height: 250px;"></div>
+    </div>
+</div>
+
+<hr />
+
+<form asp-action="Assign" method="post" class="d-inline">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <button class="btn btn-warning" type="submit">Nhận nhiệm vụ</button>
+</form>
+
+<form asp-action="StartRescue" method="post" class="d-inline">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <button class="btn btn-primary" type="submit">Bắt đầu cứu hộ</button>
+</form>
+
+<form asp-action="Complete" method="post" class="d-inline">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <input type="hidden" name="notes" value="Hoàn thành cứu hộ" />
+    <button class="btn btn-success" type="submit">Hoàn thành</button>
+</form>
+
+<form asp-action="CannotReach" method="post" class="d-inline">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <input type="hidden" name="notes" value="Không tiếp cận được" />
+    <button class="btn btn-outline-danger" type="submit">Không tiếp cận được</button>
+</form>
+
+@section Scripts{
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var lat = @Model.Latitude?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "null";
+            var lng = @Model.Longitude?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "null";
+
+            if (lat && lng && lat !== "null" && lng !== "null") {
+                var map = L.map('detailMap').setView([lat, lng], 16);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19
+                }).addTo(map);
+                L.marker([lat, lng]).addTo(map).bindPopup("Vị trí yêu cầu").openPopup();
+            }
+        });
+    </script>
+}

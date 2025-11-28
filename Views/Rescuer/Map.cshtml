@@ -1,0 +1,46 @@
+@{
+    ViewData["Title"] = "Bản đồ cứu hộ";
+}
+
+<h2>🗺 Bản đồ các yêu cầu trong khu vực</h2>
+
+<div id="rescueMap" style="height: 480px;" class="mb-3"></div>
+
+@section Scripts{
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var map = L.map('rescueMap').setView([16.047, 108.206], 6);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19
+            }).addTo(map);
+
+            fetch('@Url.Action("RequestsJson", "Rescuer")')
+                .then(r => r.json())
+                .then(data => {
+                    data.forEach(item => {
+                        if (!item.lat || !item.lng) return;
+                        const color = item.risk === 4 ? 'red' :
+                                      item.risk === 3 ? 'orange' :
+                                      item.risk === 2 ? 'yellow' : 'blue';
+
+                        const marker = L.circleMarker([item.lat, item.lng], {
+                            radius: 8,
+                            color: color,
+                            fillColor: color,
+                            fillOpacity: 0.7
+                        }).addTo(map);
+
+                        marker.bindPopup(
+                            `<strong>${item.code}</strong><br/>
+                             ${item.name}<br/>
+                             Ưu tiên: ${item.risk}<br/>
+                             Trạng thái: ${item.status}<br/>
+                             <a href='@Url.Action("RequestDetails","Rescuer")/${item.id}'>Chi tiết</a>`
+                        );
+                    });
+                });
+        });
+    </script>
+}

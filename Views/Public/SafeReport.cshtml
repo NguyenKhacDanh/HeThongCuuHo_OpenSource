@@ -1,0 +1,79 @@
+@model RescueHub.ViewModels.Public.CreateSafeReportViewModel
+@{
+    ViewData["Title"] = "Tôi đang an toàn";
+}
+
+<h2 class="mb-3">✅ Tôi đang an toàn</h2>
+
+<form asp-action="SafeReport" method="post" class="row g-3">
+    <div class="col-md-6">
+        <label class="form-label">Họ và tên *</label>
+        <input asp-for="FullName" class="form-control" />
+        <span asp-validation-for="FullName" class="text-danger"></span>
+    </div>
+    <div class="col-md-6">
+        <label class="form-label">Số điện thoại *</label>
+        <input asp-for="PhoneNumber" class="form-control" />
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Địa chỉ mô tả</label>
+        <textarea asp-for="AddressText" class="form-control" rows="2"></textarea>
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Tọa độ GPS</label>
+        <div class="input-group mb-2">
+            <span class="input-group-text">Lat</span>
+            <input asp-for="Latitude" class="form-control" />
+            <span class="input-group-text">Lng</span>
+            <input asp-for="Longitude" class="form-control" />
+        </div>
+        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="getLocationSafe()">📍 Lấy vị trí hiện tại</button>
+    </div>
+
+    <div class="col-md-6" id="safeMapContainer" style="height: 250px; display:none;">
+        <div id="safeMap" style="height: 100%;"></div>
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Ghi chú thêm</label>
+        <textarea asp-for="Note" class="form-control" rows="3"></textarea>
+    </div>
+
+    <div class="col-12">
+        <button type="submit" class="btn btn-success btn-lg">Gửi xác nhận an toàn</button>
+    </div>
+</form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        function getLocationSafe() {
+            if (!navigator.geolocation) {
+                alert("Trình duyệt không hỗ trợ GPS.");
+                return;
+            }
+            navigator.geolocation.getCurrentPosition(function (pos) {
+                const lat = pos.coords.latitude;
+                const lng = pos.coords.longitude;
+                document.getElementById("Latitude").value = lat;
+                document.getElementById("Longitude").value = lng;
+
+                const container = document.getElementById("safeMapContainer");
+                container.style.display = "block";
+
+                const map = L.map('safeMap').setView([lat, lng], 16);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19
+                }).addTo(map);
+                L.marker([lat, lng]).addTo(map).bindPopup("Vị trí của bạn").openPopup();
+            }, function (err) {
+                alert("Không lấy được vị trí: " + err.message);
+            });
+        }
+    </script>
+}

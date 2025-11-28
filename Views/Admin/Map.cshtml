@@ -1,0 +1,31 @@
+<h2>🗺 Bản đồ tổng hợp</h2>
+<div id="adminMap" style="height:500px;"></div>
+
+@section Scripts{
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", ()=>{
+  var map=L.map('adminMap').setView([16.047,108.206],6);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
+
+  fetch('@Url.Action("MapDataJson","Admin")')
+    .then(r=>r.json())
+    .then(items=>{
+        items.forEach(x=>{
+            if(!x.lat||!x.lng) return;
+            let color = x.type==="safe" ? "green"
+                      : x.type==="shelter" ? "purple"
+                      : x.risk==4? "red": x.risk==3? "orange": x.risk==2? "yellow":"blue";
+
+            let mk=L.circleMarker([x.lat,x.lng],{
+                radius:8,color:color,fillColor:color,fillOpacity:.7
+            }).addTo(map);
+
+            mk.bindPopup(`<b>${x.type.toUpperCase()}</b><br>${x.name}<br>${x.code??""}`);
+        });
+    });
+});
+</script>
+}

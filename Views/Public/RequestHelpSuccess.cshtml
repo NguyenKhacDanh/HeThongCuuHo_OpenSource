@@ -1,0 +1,11 @@
+@model RescueHub.Models.Entities.UserRequest
+@{
+    ViewData["Title"] = "Gửi yêu cầu thành công";
+}
+<div class="text-center my-5">
+    <h2>✅ Đã ghi nhận yêu cầu cứu hộ</h2>
+    <p class="lead">Mã yêu cầu của bạn:</p>
+    <p class="display-6 fw-bold">@Model.RequestCode</p>
+    <p>Đội cứu hộ sẽ liên hệ với bạn khi tiếp nhận nhiệm vụ. Hãy giữ điện thoại luôn sẵn sàng.</p>
+    <a asp-action="Index" class="btn btn-primary mt-3">Về trang chủ</a>
+</div>
