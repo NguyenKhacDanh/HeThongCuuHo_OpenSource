@@ -1,22 +1,111 @@
 # RescueHub – Hệ thống cứu hộ cứu nạn (.NET 8 MVC)
 
-## Cách chạy:
-1. Chỉnh `appsettings.json` connection string
+Nguồn phát triển & ý tưởng ban đầu:
+→ Nguyễn Khắc Danh
+
+Mục đích dự án:
+Hỗ trợ tiếp nhận – điều phối – thống kê cứu hộ trong thiên tai, lũ lụt.
+Dự án hiện chưa hoàn thiện và được công bố dạng open-source để cộng đồng cùng phát triển tiếp.
+
+---
+
+## 🚀 Mục tiêu của dự án
+
+- Tạo một hệ thống nhanh – dễ dùng – miễn phí – open source phục vụ các đội cứu hộ & người dân.
+- Có thể triển khai thực tế cho:
+  • Chính quyền địa phương
+  • Đội cứu hộ tình nguyện
+  • Cộng đồng ứng phó thiên tai
+  • Các nhóm xã hội hỗ trợ vùng ngập lụt / sạt lở
+
+---
+
+## 🛠 Công nghệ sử dụng
+
+- ASP.NET Core MVC (.NET 8)
+- Entity Framework Core – Code First
+- SQL Server
+- ASP.NET Identity
+- Bootstrap 5 (Dark / Light Mode)
+- Leaflet Map + OpenStreetMap
+- HTML5 Geolocation API
+- Upload hình ảnh hiện trường
+
+---
+
+## 📦 Chức năng đã hoàn thiện (v1)
+
+### 👤 Người dân (Anonymous – không cần login)
+- Gửi yêu cầu cứu hộ khẩn cấp.
+- Lấy GPS tự động.
+- Upload ảnh hiện trường.
+- Nhập mô tả chi tiết + yếu tố nguy hiểm.
+- Sinh mã yêu cầu REQ-yyyyMMdd-xxxx.
+- Gửi báo cáo "Tôi đang an toàn".
+
+### 🚑 Rescuer (Người cứu hộ)
+- Đăng ký Rescuer (khu vực hoạt động + bán kính).
+- Dashboard xem yêu cầu gần nhất theo mức độ.
+- Tính khoảng cách đến điểm yêu cầu.
+- Map cứu hộ bằng Leaflet.
+- Nhận nhiệm vụ → đang cứu hộ → hoàn thành / không thể tiếp cận.
+- Log notification (giả lập SMS/Email).
+
+### 🛠 Admin Panel
+- Dashboard thống kê theo trạng thái.
+- Số yêu cầu mới (1 giờ / 24 giờ).
+- Bản đồ tổng hợp request / safe report / shelter.
+- Quản lý rescuer.
+- Export CSV / báo cáo.
+
+---
+
+## 🔮 Định hướng phát triển (Open Source)
+
+### Dự kiến v2:
+- Realtime Map bằng SignalR.
+- Push Notification (Firebase / OneSignal).
+- Mobile App (Flutter).
+- Tích hợp cảnh báo Zalo OA / SMS Gateway.
+- Tối ưu UI cho vùng Internet yếu.
+- PWA Offline mode.
+- Phân tuyến nhiệm vụ nâng cao theo khu vực.
+
+Cộng đồng có thể đóng góp tự do.
+
+---
+
+## 🧪 Cách chạy dự án
+
+1. Cấu hình connection string trong `appsettings.json`
+ "DefaultConnection": "Server=localhost;Database=RescueHubDb;Trusted_Connection=True;TrustServerCertificate=True"
+
 2. Chạy migration:
-```
 dotnet ef migrations add Init
 dotnet ef database update
-```
-3. Run:
-```
+
+3. Chạy web:
 dotnet run
-```
 
-## Tài khoản mặc định:
-- Admin: admin@rescuehub.local / Admin@123
-- Rescuer: rescue1@rescuehub.local / Rescue@123
+---
 
-## Tính năng:
-- Người dân gửi yêu cầu + GPS + ảnh
-- Rescuer xem Dashboard + Map + nhận nhiệm vụ
-- Admin xem thống kê + map tổng + export CSV
+## 🔐 Tài khoản mặc định (được seed sẵn)
+
+Admin:
+• Email: admin@rescuehub.local
+• Password: Admin@123
+
+Rescuer:
+• Email: rescue1@rescuehub.local
+• Password: Rescue@123
+
+---
+
+## ❤️ Ghi chú tác giả
+
+Dự án này được tạo ra nhằm hỗ trợ cộng đồng trong mùa lũ và thiên tai.
+Mong rằng nó sẽ giúp ích cho các đội cứu hộ – hoặc làm nền tảng để xây dựng hệ thống lớn hơn.
+
+Dự án hoàn toàn open-source. Mọi đóng góp đều được hoan nghênh.
+
+— RescueHub by Nguyễn Khắc Danh - 0981494148
